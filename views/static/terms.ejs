@@ -1,0 +1,53 @@
+
+<% layout("layouts/boilerplate") %>
+
+<style>
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+section {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
+
+
+<section class="py-5 px-3 px-md-5" style="background-color: #fefefe;">
+  <div class="container">
+    <h1 class="display-5 fw-bold mb-4" style="font-family: 'Playfair Display', serif;">
+      📜 Terms & Conditions
+    </h1>
+
+    <p class="lead mb-4">
+      Please read these terms carefully before using Wanderlust. By using the platform, you agree to abide by these rules:
+    </p>
+
+    <ol class="ps-4 mb-4">
+      <li class="mb-2">
+        📌 All booking details must be accurate and honest.
+      </li>
+      <li class="mb-2">
+        🚫 Users must not misuse the platform for illegal activities.
+      </li>
+      <li class="mb-2">
+        💳 All payments are processed securely via Stripe.
+      </li>
+    </ol>
+
+    <p class="text-muted">
+      Failure to follow these terms may result in account suspension or removal.
+    </p>
+  </div>
+</section>
+

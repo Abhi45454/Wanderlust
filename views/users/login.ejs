@@ -1,0 +1,134 @@
+
+
+
+
+ <% layout("/layouts/boilerplate") %>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+
+<style>
+    body {
+  background: 
+  url("https://images.unsplash.com/photo-1421789665209-c9b2a435e3dc?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fG5hdHVyZXxlbnwwfHwwfHx8MA%3D%3D") no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+
+  }
+
+  .login-box {
+    max-width: 400px;
+    margin: 100px auto;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 40px;
+    border-radius: 10px;
+    color: white;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  }
+
+  .login-box h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  .form-group {
+    position: relative;
+    margin-bottom: 25px;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 12px 40px 12px 15px;
+    border-radius: 4px;
+  }
+
+  .form-group i {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+  } 
+
+  .login-btn {
+    width: 100%;
+    padding: 12px;
+    background: #00bfa6;
+    border: none;
+    color: white;
+    font-weight: 600;
+    border-radius: 4px;
+    transition: background 0.3s;
+  }
+
+  .login-btn:hover {
+    background: #009e8a;
+  }
+
+  .forgot {
+    display: block;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    color: #ccc;
+    text-decoration: none;
+  }
+
+  .google-btn {
+    width: 100%;
+    background: white;
+    color: #444;
+    border: 1px solid #ddd;
+    padding: 12px;
+    border-radius: 4px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+  }
+
+  .google-btn:hover {
+    background: #f1f1f1;
+  }
+
+  .google-btn i {
+    margin-right: 8px;
+    color: #db4437;
+  }
+
+  @media (max-width: 500px) {
+    .login-box {
+      margin: 60px 20px;
+      padding: 30px 20px;
+    }
+  }
+</style>
+
+<div class="login-box">
+  <h2>LOGIN</h2>
+  <form action="/login" method="POST">
+    <div class="form-group">
+      <input type="text" name="username" class="form-control" placeholder="Username" required />
+      <i class="fa-solid fa-user"></i>
+    </div>
+    <div class="form-group">
+      <input type="password" name="password" class="form-control" placeholder="Password" required />
+      <i class="fa-solid fa-lock"></i>
+    </div>
+    <a href="#" class="forgot">Forgot Password?</a>
+    <button type="submit" class="login-btn">LOGIN</button>
+  </form>
+
+  <div class="mt-3">
+    <a href="/auth/google" class="google-btn">
+      <i class="fab fa-google"></i> Login with Google
+    </a>
+  </div>
+</div>
+

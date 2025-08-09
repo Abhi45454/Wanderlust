@@ -1,0 +1,315 @@
+
+<% layout("layouts/boilerplate") %>
+
+
+<style>
+
+  input[type="range"] {
+  width: 100%;
+}
+
+.flatpickr-calendar {
+  z-index: 9999 !important;
+}
+  #map {
+    width: 100%;
+    height: 50vh; 
+    min-height: 300px;
+    max-width: 100%;
+    border-radius: 8px;
+    margin-top: 1rem;
+  }
+
+  @media (max-width: 768px) {
+
+     .col-6.offset-3 {
+      width: 90% !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+
+    #map {
+      height: 40vh;
+    }
+    
+  }
+
+
+  .no-border-card {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+
+
+</style>
+
+
+
+
+   <div class="row mt-3">
+      <div class="col-8 offset-3">
+    <h3><b><%= listing.title  %></b> </h3>
+    </div>
+
+    <div class="card col-6 offset-3 show-card listing-card">
+  <img src="<%= listing.image.url %>" class="card-img-top show-img" alt="Listing_image">
+  <div class="card-body">
+    <p class="card-text">Owned by:<i><%= listing.owner.username %> </i> </p>
+        <p class="card-text"> <%= listing.description  %> </p>
+       <p class="card-text">  &#8377; <%= listing.price.toLocaleString("en-IN") %> </p>
+        <p class="card-text"> <%= listing.location  %> </p>
+        <p class="card-text"> <%= listing.country %> </p>  
+
+  </div>
+</div>
+    </div>
+     <br> 
+
+
+ <% if(currUser && listing.owner._id.equals(currUser._id))  { %>
+     <div class="btns">
+      <a href="/listings/<%= listing._id %>/edit" 
+         class="btn btn-dark col-1.5 offset-3 edit-btn ">Edit</a>
+     
+       <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
+        <button class="btn btn-dark offset-5">Delete</button>
+      </form>
+   </div>
+   <% } %>
+
+
+  <div class="card col-6 offset-3 my-4 shadow-sm">
+
+  <% if(currUser) { %>
+    <div class="card shadow border-0 p-4">
+      <h4 class="font-weight-bold mb-4">📅 Book this Stay</h4>
+      <form action="/listings/<%= listing._id %>/book" method="POST" id="bookingForm">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="dateRange">Select Dates</label>
+            <input type="text" id="dateRange" class="form-control" placeholder="Pick your stay range" required>
+            <input type="hidden" name="checkIn" id="checkIn">
+            <input type="hidden" name="checkOut" id="checkOut">
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="guests">Guests</label>
+            <input type="range" id="guests" name="guests" class="form-range" min="1" max="10" value="2" oninput="guestOutput.innerText = `${this.value} guest${this.value > 1 ? 's' : ''}`">
+            <p class="mt-2 text-muted">👥 <span id="guestOutput">2 guests</span></p>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label>Total Price</label>
+            <input type="text" id="totalPrice" class="form-control bg-light" readonly value="₹ 0">
+          </div>
+
+          <div class="col-12 mt-3">
+            <button class="btn btn-primary w-100 shadow-sm">✨ Confirm Booking</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  <% } else { %>
+    <div class="alert alert-info">Please <a href="/login">Log in</a> to book this stay.</div>
+  <% } %>
+</div>
+
+
+          <div class="card col-6 offset-3 mb-3 my-4 p-4 shadow-sm no-border-card">
+          <% if(currUser) { %> 
+            <hr>
+          <h4>Leave a Review</h4>
+          <form action="/listings/<%= listing.id %>/reviews" method="POST" novalidate class="needs-validation">
+             <div class="mb-3 mt-3">
+              <label for="rating" class="form-label">Rating</label>
+            <fieldset class="starability-slot">
+  <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+  <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+  <label for="first-rate1" title="Terrible">1 star</label>
+  <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+  <label for="first-rate2" title="Not good">2 stars</label>
+  <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+  <label for="first-rate3" title="Average">3 stars</label>
+  <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+  <label for="first-rate4" title="Very good">4 stars</label>
+  <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+  <label for="first-rate5" title="Amazing">5 stars</label>
+</fieldset>
+</div>
+
+            <div class="mb-3 mt-3">
+              <label for="Comment" class="form-label">Comments</label>
+              <textarea name="review[Comment]" id="Comment" cols="30" rows="5" class="form-control" required></textarea>
+              <div class="invalid-feedback">Please add some comments for review
+              </div>
+            </div>
+            <button class="btn btn-outline-dark">Submit</button>
+          </form>
+          <hr>
+          <% } %>
+
+
+          <% if(listing.reviews.length > 0) { %>
+          <div class="row">
+            <p><b>All Reviews</b></p>
+            <% for(review of listing.reviews) { %>
+              <div class="card col-7 ms-3 mb-3">
+  <div class="card-body">
+    <h5 class="card-title">@<%= review.author.username %></h5>
+    <p class="starability-result card-text" data-rating="<%= review.rating %>">
+  </p>
+    <p class="card-text"><%= review.Comment %></p>
+    <form class="mb-3" method="post" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=Delete">
+      <button class="btn btn-sm btn-dark">Delete</button>
+    </form>
+  </div>
+</div>
+         <% } %>
+        </div>
+        <% } %>
+     </div>
+     <div class="col-6 offset-3 mb-3 ">
+      <h3>Where you'll be</h3>
+      <div id="map"></div>
+     </div>
+  </div>
+   <% if (geoData && geoData.lon && geoData.lat) { %>
+   <script type="text/javascript">
+            var key = 'pk.8e5446aa533b61a564c574c95159cb25';   //Insert your LocationIQ access token here
+
+            var styleJson = 'https://tiles.locationiq.com/v3/streets/vector.json?key=' + key;
+
+            const map = new ol.Map({
+                target: 'map',
+                view: new ol.View({
+                    center: ol.proj.fromLonLat([<%= geoData.lon %>, <%= geoData.lat %>]),
+
+
+                    zoom: 12
+                })
+            });
+
+    olms.apply(map, styleJson).then(() => {
+       
+
+const marker = new ol.Feature({
+    geometry: new ol.geom.Point(ol.proj.fromLonLat([<%= geoData.lon %>, <%= geoData.lat %>]))
+});
+
+// Marker style (pin icon)
+marker.setStyle(new ol.style.Style({
+    image: new ol.style.Icon({
+        anchor: [0.5, 1],
+        src: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+        scale: 0.05
+    })
+}));
+
+
+const circle = new ol.Feature(
+    new ol.geom.Circle(ol.proj.fromLonLat([<%= geoData.lon %>, <%= geoData.lat %>]), 200) // radius in meters
+);
+
+circle.setStyle(new ol.style.Style({
+    fill: new ol.style.Fill({
+        color: 'rgba(30, 144, 255, 0.2)'   // faded blue
+    }),
+    stroke: new ol.style.Stroke({
+        color: 'rgba(30, 144, 255, 0.6)',
+        width: 1
+    })
+}));
+
+
+const vectorSource = new ol.source.Vector({
+    features: [circle, marker]
+});
+
+const markerLayer = new ol.layer.Vector({
+    source: vectorSource
+});
+
+// Add layer to map
+map.addLayer(markerLayer);
+
+
+        const overlay = new ol.Overlay({
+            element: document.createElement('div'),
+            positioning: 'bottom-center',
+            stopEvent: false,
+            offset: [0, -20]
+        });
+
+        overlay.getElement().innerHTML = `
+  <div style="
+    background: white; 
+    padding: 6px 10px; 
+    border-radius: 8px; 
+    border: 1px solid rgba(0,0,0,0.2); 
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3); 
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    max-width: 150px;
+    text-align: center;
+  "><%= listing.title %>
+  </div>
+`;
+
+        map.addOverlay(overlay);
+        overlay.setPosition(ol.proj.fromLonLat([<%= geoData.lon %>, <%= geoData.lat %>]));
+
+    });
+
+
+
+    
+</script>
+<% } else { %>
+<p style="text-align: center;">Location data not available for this listing.</p>
+<% } %>
+
+
+
+
+
+  <!-- Include Flatpickr CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+  const pricePerNight = <%= listing.price %>;
+  const bookedOutDates = <%- JSON.stringify(listing.bookedDates || []) %>; // must be in YYYY-MM-DD format
+
+  const fp = flatpickr("#dateRange", {
+    mode: "range",
+    minDate: "today",
+    disable: bookedOutDates,
+    dateFormat: "Y-m-d",
+    onClose: function(selectedDates) {
+      if (selectedDates.length === 2) {
+        const [checkInDate, checkOutDate] = selectedDates;
+        document.getElementById("checkIn").value = checkInDate.toISOString().split('T')[0];
+        document.getElementById("checkOut").value = checkOutDate.toISOString().split('T')[0];
+
+        const diffTime = Math.abs(checkOutDate - checkInDate);
+        const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        document.getElementById("totalPrice").value = `₹ ${nights * pricePerNight}`;
+      }
+    }
+  });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+ 
